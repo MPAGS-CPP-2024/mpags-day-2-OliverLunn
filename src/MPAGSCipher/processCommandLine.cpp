@@ -3,7 +3,6 @@
 #include <cctype>
 #include <vector>
 
-
 #include "processCommandLine.hpp"
 
 bool processCommandLine(const std::vector<std::string>& args,
