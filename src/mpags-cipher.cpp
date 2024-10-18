@@ -1,4 +1,5 @@
 #include <cctype>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -51,6 +52,20 @@ int main(int argc, char* argv[])
     char inputChar{'x'};
     std::string inputText;
 
+    if (!inputFile.empty()) {
+        std::ifstream inputStream{inputFile};
+        if (!inputStream.good()) {
+            std::cerr << "[error] failed to create inputstream" << inputFile
+                      << "" << std::endl;
+            return 1;
+        }
+
+        // loop over each character from user input
+        while (std::cin >> inputChar) {
+            inputText += transformChar(inputChar);
+        }
+        // Print out the transliterated text
+    }
     // Read in user input from stdin/file
     // Warn that input file option not yet implemented
     if (!inputFile.empty()) {
@@ -58,20 +73,22 @@ int main(int argc, char* argv[])
                   << "') not implemented yet, using stdin\n";
     }
 
-    // loop over each character from user input
-    while (std::cin >> inputChar) {
-        inputText += transformChar(inputChar);
-    }
-    // Print out the transliterated text
-
     // Warn that output file option not yet implemented
     if (!outputFile.empty()) {
-        std::cerr << "[warning] output to file ('" << outputFile
-                  << "') not implemented yet, using stdout\n";
+        std::ofstream outputStream{outputFile};
+        if (!outputStream.good()) {
+            std::cerr << "[warning] output to file ('" << outputFile
+                      << "') not implemented yet, using stdout\n";
+
+            return 1;
+        }
+
+        outputStream << inputText << std::endl;
     }
 
-    std::cout << inputText << std::endl;
-
+    else {
+        std::cout << inputText << std::endl;
+    }
     // No requirement to return from main, but we do so for clarity
     // and for consistency with other functions
     return 0;
